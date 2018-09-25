@@ -9,8 +9,16 @@ const defaultState = {
 const reducer = (state = defaultState, action) => {
   switch (action.type) {
     case "ADD_LINE":
+      const updatedAreas = state.areas.map(a => {
+        if (a.id === action.payload.areaId) {
+          a.lines.push(action.payload.line);
+        }
+
+        return a;
+      });
+
       return {
-        areas: state.areas.push(action.payload)
+        areas: updatedAreas
       };
     case "GET_AREAS":
       return {

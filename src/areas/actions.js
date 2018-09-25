@@ -3,7 +3,7 @@ import fetch from "fetch-retry";
 
 const gatewayUrl = "https://jci-jcos-dev.azure-api.net";
 
-const bearerToken = "your-bearer-token";
+const bearerToken = "your-auth-token";
 
 const getAreas = createAction("GET_AREAS", async () => {
   const result = await fetch(
@@ -27,7 +27,7 @@ const addLine = createAction("ADD_LINE", async areaId => {
       method: "POST",
       body: JSON.stringify({
         retired: false,
-        name: "joe test line 8"
+        name: "joe test line 22"
       }),
       headers: {
         Authorization: `Bearer ${bearerToken}`,
@@ -37,11 +37,10 @@ const addLine = createAction("ADD_LINE", async areaId => {
   );
 
   //should probaby verify the 202 ...
-  const location = createResult.headers["location"];
-  console.log("headers are" + JSON.stringify(createResult.headers));
-  /*
+  const location = createResult.headers.get("location");
+
   const getResult = await fetch(`${gatewayUrl}/plant/${location}`, {
-    retries: 3,
+    retries: 5,
     retryDelay: 1000,
     retryOn: [404],
     headers: {
@@ -49,11 +48,13 @@ const addLine = createAction("ADD_LINE", async areaId => {
     }
   });
 
-  const json = await getResult.json();
+  const line = await getResult.json();
 
   //should probably check for null or something
-  return json;
-  */
+  return {
+    areaId,
+    line
+  };
 });
 
 export { addLine, getAreas };
